@@ -11,12 +11,29 @@ int x=0;         //Mass of correction water to be added
 int t=0;         //Time since the last valve was opened
 int tlast=0;     //Time since last valve opened in milliseconds
 int topen=0;     //computed time for valve to stay open in ms
+int setpoint=0;  //For fun
+int UCL=0;       //Stands for U Can't Lel
+int LCL=0;       // 52nd element
+int sd=6.396;         // 
 double salinity=0;
 
 void setup()
 {
+Csp=;                    // given by instructor
 Serial.begin(9600);
-
+setpoint= 1950.6*pow(Csp,.1961);
+UCL= setpoint + 3*sd;
+LCL= setpoint - 3*sd;
+  pinMode(1,OUTPUT);                   // printing to ye olde LCD
+  Serial.write(12);
+  Serial.write(128);
+  Serial.write("Setpoint=");
+  Serial.write(1)
+  Serial.write(152);
+  Serial.write("UCL=");
+  Serial.write(189);
+  Serial.write("LCL=");
+  Serial.write(22);
 }
 
 void loop()
