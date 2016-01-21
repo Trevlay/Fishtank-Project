@@ -66,18 +66,18 @@ C1= 1.6671E-17*pow(output,5.0994);      // salinity as 0.1 etc
   Serial.print(float(C1),3);
   t=millis()-tlast;
 
-//Serial.print("output= "); 
-//Serial.print(output);
-//Serial.print("    salinity= "); 
-//Serial.println(C1,21);
+//NA Serial.print("output= "); 
+//NA Serial.print(output);
+//NA Serial.print("    salinity= "); 
+//NA Serial.println(C1,21);
 
 if(t>=deadtime)
 {
   if(UCL<=output){
-    aboveUCL;
+    aboveUCL();
   }
   if(LCL>=output){
-    belowLCL;
+    belowLCL();
   }
 }
 }
