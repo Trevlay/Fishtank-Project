@@ -68,18 +68,16 @@ Serial.print(output);
 Serial.print("    salinity= "); 
 Serial.println(C1,21);
 
-if(t>==deadtime){
-  if(UCL<==C1){
+if(t>==deadtime)
+{
+  if(UCL<==output){
     void aboveUCL;
   }
-  if(LCL>==C1){
+  if(LCL>==output){
     void belowLCL;
   }
 }
 }
-
-
-// Void UCL and Void LCL
 
 void belowLCL(){
   C2=C1+(Csp-C1)*G;                    //Target concentration
@@ -88,8 +86,8 @@ void belowLCL(){
     Serial.write(169);
     Serial.write(ON);
 
-   digitalWrite(12, HIGH);   
-   delay(1000);              
+   digitalWrite(12, HIGH);            //Open salty valve
+   delay(topen);              
    digitalWrite(12, LOW);    
    delay(2000); 
 
@@ -107,8 +105,8 @@ void aboveUCL(){
     Serial.write(183);
     Serial.write(ON);
 
-   digitalWrite(11, HIGH);   
-   delay(1000);              
+   digitalWrite(11, HIGH);               //Open DI valve
+   delay(topen);              
    digitalWrite(11, LOW);    
    delay(2000); 
 
