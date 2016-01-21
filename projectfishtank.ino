@@ -1,8 +1,8 @@
 int Csp=0;       //Setpoint in decimal form
 int setpoint=0;  //Setpoint (Csp) in analog form 
-double C1=0;     //Salinity (Initial NaCl concentration)
+double C1=0;     //Salinity
 int C2=0;        //Target NaCl concentration
-int deadtime=0;  //Deadtime
+int deadtime=6.89;  //Deadtime
 int FR=0;        //Flow rate through solenoid valve
 int G=0;         //Gain
 int OF=0;        //Fraction of overflow that comes from DI tank
@@ -25,7 +25,10 @@ Serial.begin(9600);
 setpoint= 1950.6*pow(Csp,.1961);
 UCL= setpoint + 3*sd;
 LCL= setpoint - 3*sd;
-
+  
+  pinMode(12,OUTPUT);
+  pinMode(11,OUTPUT);
+  
   pinMode(1,OUTPUT);                   // printing to ye olde LCD
   Serial.write(12);
   Serial.write(132);
@@ -52,7 +55,7 @@ LCL= setpoint - 3*sd;
 void loop()
 {
 output=analogRead(0);
-C1= 1.6671E-17*pow(output,5.0994);
+C1= 1.6671E-17*pow(output,5.0994);      // salinity as 0.001 etc
 
   Serial.write(175);
   Serial.write(C1);
@@ -65,23 +68,30 @@ Serial.print(output);
 Serial.print("    salinity= "); 
 Serial.println(C1,21);
 
-
-// In setup, compute UCL and LCL given a certain setpoint. Then, in loop, create if(salinity>=[UCL/LCL]) x2 and input
-// solenoid valve program ~should be on Carli's pc or on pp.
-
+if(t>==deadtime){
+  if(UCL<==C1){
+    void aboveUCL;
+  }
+  if(LCL>==C1){
+    void belowLCL;
+  }
+}
 }
 
 
 // Void UCL and Void LCL
 
-void Below LCL(){
+void belowLCL(){
   C2=C1+(Csp-C1)*G;                    //Target concentration
   x=(m(C1-C2))/((1-OF)*(Csp-C1));      //Mass of salty water to be added (grams)
   topen=60*(x/FR);                     //Time to leave valve open (milliseconds)
     Serial.write(169);
     Serial.write(ON);
 
-// open salty valve for topen and then close it
+   digitalWrite(12, HIGH);   
+   delay(1000);              
+   digitalWrite(12, LOW);    
+   delay(2000); 
 
     Serial.write(169);
     Serial.write(OFF);
@@ -90,14 +100,17 @@ void Below LCL(){
 tlast=millis();
 }
 
-void Above UCL(){
+void aboveUCL(){
   C2=C1-(C1-Csp)*G;                      //Target concentration
   x=(m(C1-C2))/((1-OF)*C1);              //Mass of DI water to be added (grams)
   topen=60*(x/FR);                       //Time to leave valve open (milliseconds)
     Serial.write(183);
     Serial.write(ON);
 
-// open DI valve for topen and then close it
+   digitalWrite(11, HIGH);   
+   delay(1000);              
+   digitalWrite(11, LOW);    
+   delay(2000); 
 
     Serial.write(183);
     Serial.write(OFF);
