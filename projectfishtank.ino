@@ -21,7 +21,7 @@ float sd=6.396;    //Standard Deviation
 void setup()
 {
 Csp=0.1;                // given by instructor
-G=.7;                      // received from proctor
+G=.8;                      // randomly chosen
 FR=.17;                    // L/min
 m=2*pow(.8,2)*3.14;
 Serial.begin(9600);
