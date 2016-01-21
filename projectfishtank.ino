@@ -1,5 +1,6 @@
-int Csp=0;       //Setpoint
-int C1=0;        //Initial NaCl concentration 
+int Csp=0;       //Setpoint in decimal form
+int setpoint=0;  //Setpoint (Csp) in analog form 
+double C1=0;     //Salinity (Initial NaCl concentration)
 int C2=0;        //Target NaCl concentration
 int deadtime=0;  //Deadtime
 int FR=0;        //Flow rate through solenoid valve
@@ -10,12 +11,10 @@ int m=0;         //Mass of water in fishtank basin
 int x=0;         //Mass of correction water to be added
 int t=0;         //Time since the last valve was opened
 int tlast=0;     //Time since last valve opened in milliseconds
-int topen=0;     //computed time for valve to stay open in ms
-int setpoint=0;  //For fun
-int UCL=0;       //Stands for U Can't Lel
-int LCL=0;       // 52nd element
-int sd=6.396;         // 
-double salinity=0;
+int topen=0;     //Computed time for valve to stay open in ms
+int UCL=0;       //Upper control limit
+int LCL=0;       //Lower control limit
+int sd=6.396;    //Standard Deviation
 
 void setup()
 {
@@ -57,14 +56,14 @@ C1= 1.6671E-17*pow(output,5.0994);
 
   Serial.write(175);
   Serial.write(C1);
-t=millis()-tlast
+  t=millis()-tlast
 
 
 
 Serial.print("output= "); 
 Serial.print(output);
 Serial.print("    salinity= "); 
-Serial.println(salinity,21);
+Serial.println(C1,21);
 
 
 // In setup, compute UCL and LCL given a certain setpoint. Then, in loop, create if(salinity>=[UCL/LCL]) x2 and input
@@ -75,10 +74,10 @@ Serial.println(salinity,21);
 
 // Void UCL and Void LCL
 
-Void LCL(){
-  C2=C1-(Csp-C1)*G;
-  x=(m(C1-C2))/((1-OF)*(Csp-C1));            // mass of water to be added (grams)
-  topen=60*(x/FR);                     // time to leave valve open (milliseconds)
+void Below LCL(){
+  C2=C1+(Csp-C1)*G;                    //Target concentration
+  x=(m(C1-C2))/((1-OF)*(Csp-C1));      //Mass of salty water to be added (grams)
+  topen=60*(x/FR);                     //Time to leave valve open (milliseconds)
     Serial.write(169);
     Serial.write(ON);
 
@@ -91,10 +90,10 @@ Void LCL(){
 tlast=millis();
 }
 
-Void LCL(){
-  C2=C1-(C1-Csp)*G;
-  x=(m(C1-C2))/((1-OF)*C1);              // mass of water to be added (grams)
-  topen=60*(x/FR);                      // time to leave valve open (milliseconds)
+void Above UCL(){
+  C2=C1-(C1-Csp)*G;                      //Target concentration
+  x=(m(C1-C2))/((1-OF)*C1);              //Mass of DI water to be added (grams)
+  topen=60*(x/FR);                       //Time to leave valve open (milliseconds)
     Serial.write(183);
     Serial.write(ON);
 
