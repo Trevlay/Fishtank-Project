@@ -75,7 +75,7 @@ Serial.println(salinity,21);
 
 // Void UCL and Void LCL
 
-Void LCL(){
+void LCL(){
   C2=C1-(Csp-C1)*G;
   x=(m(C1-C2))/((1-OF)*(Csp-C1));            // mass of water to be added (grams)
   topen=60*(x/FR);                     // time to leave valve open (milliseconds)
@@ -91,7 +91,7 @@ Void LCL(){
 tlast=millis();
 }
 
-Void LCL(){
+void LCL(){
   C2=C1-(C1-Csp)*G;
   x=(m(C1-C2))/((1-OF)*C1);              // mass of water to be added (grams)
   topen=60*(x/FR);                      // time to leave valve open (milliseconds)
