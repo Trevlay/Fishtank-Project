@@ -1,4 +1,4 @@
-int Csp=0;       //Setpoint in decimal form
+float Csp=0;       //Setpoint in decimal form
 float setpoint=0;  //Setpoint (Csp) in analog form 
 double C1=0;     //Salinity
 int C2=0;        //Target NaCl concentration
@@ -14,11 +14,13 @@ int tlast=0;     //Time since last valve opened in milliseconds
 int topen=0;     //Computed time for valve to stay open in ms
 float UCL=0;     //Upper control limit
 float LCL=0;     //Lower control limit
-int sd=6.396;    //Standard Deviation
+float u=0;       //UCL as wt. %
+float l=0;       //LCL as wt. %
+float sd=6.396;    //Standard Deviation
 
 void setup()
 {
-Csp=0.0005;                // given by instructor
+Csp=0.1;                // given by instructor
 G=.7;                      // received from proctor
 FR=.17;                    // L/min
 m=2*pow(.8,2)*3.14;
@@ -26,6 +28,8 @@ Serial.begin(9600);
 setpoint= (1950.6*pow(Csp,.1961));
 UCL= setpoint + 3*sd;
 LCL= setpoint - 3*sd;
+u= 1.6671E-17*pow(UCL,5.0994);
+l= 1.6671E-17*pow(LCL,5.0994);
   
   pinMode(12,OUTPUT);
   pinMode(11,OUTPUT);
@@ -33,17 +37,17 @@ LCL= setpoint - 3*sd;
   pinMode(1,OUTPUT);                   // printing to ye olde LCD
   Serial.write(12);
   Serial.write(136);
-  Serial.write("SP=");
+  Serial.write("SP");
   Serial.write(155);
-  Serial.print(setpoint,3);
+  Serial.print(Csp,3);
   Serial.write(129);
-  Serial.write("UCL=");
+  Serial.write("UCL");
   Serial.write(148);
-  Serial.print(UCL,3);
+  Serial.print(u,3);
   Serial.write(143);
-  Serial.write("LCL=");
+  Serial.write("LCL");
   Serial.write(162);
-  Serial.print(LCL,3);
+  Serial.print(l,3);
   Serial.write(188);
   Serial.write("salty");
   Serial.write(194);
@@ -56,18 +60,16 @@ LCL= setpoint - 3*sd;
 void loop()
 {
 output=analogRead(0);
-C1= 1.6671E-17*pow(output,5.0994);      // salinity as 0.001 etc
+C1= 1.6671E-17*pow(output,5.0994);      // salinity as 0.1 etc
 
   Serial.write(175);
   Serial.print(float(C1),3);
   t=millis()-tlast;
 
-
-
-Serial.print("output= "); 
-Serial.print(output);
-Serial.print("    salinity= "); 
-Serial.println(C1,21);
+//Serial.print("output= "); 
+//Serial.print(output);
+//Serial.print("    salinity= "); 
+//Serial.println(C1,21);
 
 if(t>=deadtime)
 {
