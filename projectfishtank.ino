@@ -2,7 +2,7 @@ float Csp=0;       //Setpoint in decimal form
 float setpoint=0;  //Setpoint (Csp) in analog form 
 double C1=0;     //Salinity
 int C2=0;        //Target NaCl concentration
-int deadtime=6.89;  //Deadtime
+float deadtime=6.89;  //Deadtime
 int FR=0;        //Flow rate through solenoid valve
 int G=0;         //Gain
 int OF=0;        //Fraction of overflow that comes from DI tank
@@ -20,11 +20,11 @@ float sd=6.396;    //Standard deviation
 
 void setup()
 {
-Csp=0.1;                // given by instructor
+Csp=0.001;                // given by instructor
 G=.8;                      // randomly determined
 FR=.17;                    // L/min
 m=2*pow(.8,2)*3.14;
-OF=.15*m;                  // randomly set
+OF=.15*m;
 Serial.begin(9600);
 setpoint= (1950.6*pow(Csp,.1961));
 UCL= setpoint + 3*sd;
@@ -41,15 +41,15 @@ l= 1.6671E-17*pow(LCL,5.0994);
   Serial.write(136);
   Serial.write("SP");
   Serial.write(155);
-  Serial.print(Csp,3);
+  Serial.print(Csp*100,3);
   Serial.write(129);
   Serial.write("LCL");
   Serial.write(148);
-  Serial.print(l,3);
+  Serial.print(l*100,3);
   Serial.write(143);
   Serial.write("UCL");
   Serial.write(162);
-  Serial.print(u,3);
+  Serial.print(u*100,3);
   Serial.write(188);
   Serial.write("salty");
   Serial.write(194);
@@ -62,10 +62,10 @@ l= 1.6671E-17*pow(LCL,5.0994);
 void loop()
 {
 output=analogRead(4);
-C1= 1.6671E-17*pow(output,5.0994)*100;      // salinity as 0.1 etc
+C1= 1.6671E-17*pow(output,5.0994);      // salinity as 0.1 etc
 
   Serial.write(175);
-  Serial.print(float(C1),3);
+  Serial.print(float(C1*100),3);
   t=millis()-tlast;
 
 //Serial.print("output= "); 
@@ -100,6 +100,7 @@ void belowLCL(){
 
     Serial.write(169);
     Serial.write("OFF");
+    Serial.write(22);
 
 
 tlast=millis();
@@ -113,13 +114,13 @@ void aboveUCL(){
     Serial.write("ON");
 
    digitalWrite(11, HIGH);                //Open DI valve
-   delay(400);              
+   delay(topen);              
    digitalWrite(11, LOW);    
    delay(2000); 
 
     Serial.write(183);
     Serial.write("OFF");
+    Serial.write(22);
 
 tlast=millis();
 }
-
