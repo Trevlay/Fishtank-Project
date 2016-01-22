@@ -24,7 +24,7 @@ Csp=0.1;                // given by instructor
 G=.8;                      // randomly determined
 FR=.17;                    // L/min
 m=2*pow(.8,2)*3.14;
-OF=.15*m;
+OF=.15*m;                  // randomly set
 Serial.begin(9600);
 setpoint= (1950.6*pow(Csp,.1961));
 UCL= setpoint + 3*sd;
