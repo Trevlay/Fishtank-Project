@@ -16,7 +16,7 @@ float UCL=0;     //stands for
 float LCL=0;     //52nd element
 float u=0;       //UCL as wt. %
 float l=0;       //LCL as wt. %
-float sd=6.396;    //Standard Deviation
+float sd=6.396;    //Standard deviation
 
 void setup()
 {
@@ -24,7 +24,7 @@ Csp=0.1;                // given by instructor
 G=.8;                      // randomly determined
 FR=.17;                    // L/min
 m=2*pow(.8,2)*3.14;
-OF=.85  *m;
+OF=.15*m;
 Serial.begin(9600);
 setpoint= (1950.6*pow(Csp,.1961));
 UCL= setpoint + 3*sd;
@@ -75,15 +75,15 @@ C1= 1.6671E-17*pow(output,5.0994)*100;      // salinity as 0.1 etc
 
 //  delay(350);   // not necessary, may effect millis()
 
-//if(t>=deadtime)
-//{
+if(t>=deadtime)
+{
   if(UCL<=output){
     aboveUCL();
 }
   if(LCL>=output){
     belowLCL();
 }
-//}
+}
 }
 
 void belowLCL(){
@@ -122,3 +122,4 @@ void aboveUCL(){
 
 tlast=millis();
 }
+
