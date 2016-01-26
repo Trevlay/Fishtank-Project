@@ -14,16 +14,16 @@ int tlast=0;     //Time since last valve opened in milliseconds
 int topen=0;     //Computed time for valve to stay open in ms
 float UCL=0;     //stands for
 float LCL=0;     //52nd element
-float u=0;       //UCL as wt. %
-float l=0;       //LCL as wt. %
+float u=0;       //UCL as decial
+float l=0;       //LCL as decimal
 float sd=6.396;    //Standard deviation
 
 void setup()
 {
 Csp=0.001;                // given by instructor
 G=.8;                      // randomly determined
-FR=.17;                    // L/min
-m=2*pow(.8,2)*3.14;
+FR=.17;                    // L/min ************
+m=65.9;                   // mass of water two inches deep (g)
 OF=.15*m;
 Serial.begin(9600);
 setpoint= (1950.6*pow(Csp,.1961));
@@ -62,7 +62,7 @@ l= 1.6671E-17*pow(LCL,5.0994);
 void loop()
 {
 output=analogRead(4);
-C1= 1.6671E-17*pow(output,5.0994);      // salinity as 0.1 etc
+C1= 1.6671E-17*pow(output,5.0994);      // current salinity as decimal (wt %)
 
   Serial.write(175);
   Serial.print(float(C1*100),3);
@@ -88,20 +88,29 @@ if(t>=deadtime)
 
 void belowLCL(){
   C2=C1+(Csp-C1)*G;                     //Target concentration
-  x=(m*(C1-C2))/((1-OF)*(Csp-C1));      //Mass of salty water to be added (grams)
-  topen=60*((x*1000)/FR);               //Time to leave valve open (milliseconds)
-    Serial.write(169);
+  x=(m*(C2-C1))/((1-OF)*(Csp-C1));      //Mass of salty water to be added (grams)
+  topen=60*(x/FR);               //Time to leave valve open (milliseconds)
+  
+  
+  
+    Serial.write(169);                  //Display salty valve on
     Serial.write("ON");
+    Serial.write(183);
+    Serial.write("OFF");                //Display DI valve off
+    Serial.write(22);
 
-   digitalWrite(12, HIGH);             //Open salty valve
+   digitalWrite(12, HIGH);              //Open salty valve
    delay(topen);              
    digitalWrite(12, LOW);    
    delay(2000); 
 
-    Serial.write(169);
+    Serial.write(169);                  //Display both valves off
+    Serial.write("OFF");                 
+    Serial.write(183);
     Serial.write("OFF");
     Serial.write(22);
-
+    Serial.write(22);
+    
 
 tlast=millis();
 }
@@ -110,14 +119,20 @@ void aboveUCL(){
   C2=C1-(C1-Csp)*G;                       //Target concentration
   x=(m*(C1-C2))/((1-OF)*C1);              //Mass of DI water to be added (grams)
   topen=60*((x*1000)/FR);                 //Time to leave valve open (milliseconds)
+  
+    Serial.write(169);
+    Serial.write("OFF");                  //Display salty valve off
     Serial.write(183);
-    Serial.write("ON");
+    Serial.write("ON");                   //Display DI valve on
+    Serial.write(22);
 
    digitalWrite(11, HIGH);                //Open DI valve
    delay(topen);              
    digitalWrite(11, LOW);    
    delay(2000); 
 
+    Serial.write(169);                    //Display both valves off
+    Serial.write("OFF");
     Serial.write(183);
     Serial.write("OFF");
     Serial.write(22);
