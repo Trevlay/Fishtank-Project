@@ -1,17 +1,17 @@
 float Csp=0;       //Setpoint in decimal form
 float setpoint=0;  //Setpoint (Csp) in analog form 
 double C1=0;     //Salinity
-int C2=0;        //Target NaCl concentration
+float C2=0;        //Target NaCl concentration
 float deadtime=6.89;  //Deadtime
-int FR=0;        //Flow rate through solenoid valve
-int G=0;         //Gain
-int OF=0;        //Fraction of overflow that comes from DI tank
-int output=0;    //Number returned from the analogRead()
-int m=0;         //Mass of water in fishtank basin
-int x=0;         //Mass of correction water to be added
-int t=0;         //Time since the last valve was opened
-int tlast=0;     //Time since last valve opened in milliseconds
-int topen=0;     //Computed time for valve to stay open in ms
+float FR=0;        //Flow rate through solenoid valve
+float G=0;         //Gain
+float OF=0;        //Fraction of overflow that comes from DI tank
+int output=0;      //Number returned from the analogRead()
+float m=0;         //Mass of water in fishtank basin
+float x=0;         //Mass of correction water to be added
+float t=0;         //Time since the last valve was opened
+float tlast=0;     //Time since last valve opened in milliseconds
+float topen=0;     //Computed time for valve to stay open in ms
 float UCL=0;     //stands for
 float LCL=0;     //52nd element
 float u=0;       //UCL as decial
@@ -24,7 +24,7 @@ Csp=0.001;                // given by instructor
 G=.8;                      // randomly determined
 FR=.17;                    // L/min ************
 m=65.9;                   // mass of water two inches deep (g)
-OF=.15*m;
+OF=.15;
 Serial.begin(9600);
 setpoint= (1950.6*pow(Csp,.1961));
 UCL= setpoint + 3*sd;
@@ -88,8 +88,8 @@ if(t>=deadtime)
 
 void belowLCL(){
   C2=C1+(Csp-C1)*G;                     //Target concentration
-  x=(m*(C2-C1))/((1-OF)*(Csp-C1));      //Mass of salty water to be added (grams)
-  topen=60*(x/FR);               //Time to leave valve open (milliseconds)
+  x=(m*(C2-C1))/((1-OF)*(.01-C1));      //Mass of salty water to be added (grams)
+  topen=60*(x/FR);                      //Time to leave valve open (milliseconds)
   
   
   
@@ -118,7 +118,7 @@ tlast=millis();
 void aboveUCL(){
   C2=C1-(C1-Csp)*G;                       //Target concentration
   x=(m*(C1-C2))/((1-OF)*C1);              //Mass of DI water to be added (grams)
-  topen=60*((x*1000)/FR);                 //Time to leave valve open (milliseconds)
+  topen=60*(x/FR);                 //Time to leave valve open (milliseconds)
   
     Serial.write(169);
     Serial.write("OFF");                  //Display salty valve off
