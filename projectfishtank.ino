@@ -128,7 +128,6 @@ if(t>=deadtime)
 
   Serial.write(205);
   Serial.write("on ");
-
   //display that heater is on on the LCD screen
   }
 
@@ -137,7 +136,6 @@ if(t>=deadtime)
 
   Serial.write(205);
   Serial.write("off");
-  
   //display that the heater is off on the LCD screen
   }
 }
@@ -146,26 +144,11 @@ void belowLCL(){
   C2=C1+(Csp-C1)*G;                     //Target concentration
   x=(m*(C2-C1))/((1-OF)*(.01-C1));      //Mass of salty water to be added (grams)
   topen=60*(x/FR);                      //Time to leave valve open (milliseconds)
-  
-  
-  
-//    Serial.write(169);                  //Display salty valve on
-//    Serial.write("ON ");
-//    Serial.write(183);
-//    Serial.write("OFF");                //Display DI valve off
-//    Serial.write(22);
 
    digitalWrite(12, HIGH);              //Open salty valve
    delay(topen);              
    digitalWrite(12, LOW);    
    delay(2000); 
-
-   // Serial.write(169);                  //Display both valves off
-   // Serial.write("OFF");                 
-   // Serial.write(183);
-   // Serial.write("OFF");
-   // Serial.write(22);
-   // Serial.write(22);
 
 tlast=millis();
 }
@@ -174,23 +157,11 @@ void aboveUCL(){
   C2=C1-(C1-Csp)*G;                       //Target concentration
   x=(m*(C1-C2))/((1-OF)*C1);              //Mass of DI water to be added (grams)
   topen=60*(x/FR);                 //Time to leave valve open (milliseconds)
-  
-//    Serial.write(169);
-//    Serial.write("OFF");                  //Display salty valve off
- //   Serial.write(183);
- //   Serial.write("ON ");                   //Display DI valve on
- //   Serial.write(22);
 
    digitalWrite(11, HIGH);                //Open DI valve
    delay(topen);              
    digitalWrite(11, LOW);    
    delay(2000); 
-
- //   Serial.write(169);                    //Display both valves off
-   // Serial.write("OFF");
-   // Serial.write(183);
-   // Serial.write("OFF");
-   // Serial.write(22);
 
 tlast=millis();
 }
