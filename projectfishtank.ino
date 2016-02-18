@@ -30,7 +30,7 @@ float tempL=0;
 void setup()
 {
 Csp=0.001;                // given by instructor
-G=.8;                      // randomly determined
+G=.8;                      // how gansta we want it
 FR=.39;                    // L/min
 m=65.9;                   // mass of water two inches deep (g)
 OF=.15;
